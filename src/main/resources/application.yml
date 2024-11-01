@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: dibs-api
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/ably # local server
+    username: ably
+    password: 1234
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  redis:
+    host: localhost
+    port: 6379
+  server:
+    port: 8080
+
+logging:
+  level:
+    root: INFO
+    com.ably: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+  config: classpath:logback-${spring.config.activate.on-profile}.xml
