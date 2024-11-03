@@ -55,6 +55,55 @@ springdoc:
 spring:
   config:
     activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:mysql://db:3306/ably # local server
+    username: ably
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  redis:
+    host: redis
+    port: 6379
+  server:
+    port: 8080
+
+jwt:
+  access-secret: ably-access-token-secret-key
+  refresh-secret: ably-refresh-token-secret-key
+  #  access-expiration: 600000  # 10 min: 10min * 60 sec * 1000 millisecond
+  #  refresh-expiration: 10800000  # 10800000 3 hours: 3hours * 60min * 60sec * 1000 millisecond
+  # 테스트용으로 짧게 설정
+  access-expiration: 30000  # 30 sec
+  refresh-expiration: 300000  # 5 min
+
+logging:
+  level:
+    root: INFO
+    com.ably: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security.web.FilterChainProxy: DEBUG
+  config: classpath:logback-${spring.config.activate.on-profile}.xml
+
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+---
+spring:
+  config:
+    activate:
       on-profile: test
   datasource:
     url: jdbc:mysql://localhost:3306/ably_test # local server

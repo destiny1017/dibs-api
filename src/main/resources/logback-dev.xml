@@ -8,7 +8,7 @@
     <property name="FILE_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"/>
     <property name="LOG_PATH" value="/development/logs/${spring.application.name}"/>
 
-    <springProfile name="local">
+    <springProfile name="dev">
         <appender name="dailyRolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <filter class="ch.qos.logback.classic.filter.LevelFilter">
                 <level>DEBUG</level>
