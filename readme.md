@@ -1,3 +1,8 @@
+## 💻 Ably 사전과제 프로젝트
+
+> 시간이 없어 readme를 깔끔하게 정리하지 못했습니다ㅠ 좀 더 편하게 보시려면 노션페이지를 봐주세요!  
+  https://www.notion.so/ABLY-1311473486ff806c8741e081631edf35
+  
 - 고려사항
     - 사전과제 실행환경에 docker가 설치되어 있나?
         - docker-compose로 일단 만들고 시간 되면 home server 환경도 만들기
