@@ -5,6 +5,7 @@ import com.ably.dibs_api.controller.dto.LoginRequest;
 import com.ably.dibs_api.controller.dto.LoginResponse;
 import com.ably.dibs_api.controller.dto.SignUpRequest;
 import com.ably.dibs_api.controller.dto.UserInfoResponse;
+import com.ably.dibs_api.domain.dibs.DibsRepository;
 import com.ably.dibs_api.domain.user.User;
 import com.ably.dibs_api.domain.user.UserService;
 import com.ably.dibs_api.domain.user.auth.JwtService;
@@ -25,6 +26,13 @@ public class UserController {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final DibsRepository dibsRepository;
+
+    @GetMapping("/login")
+    public String test() {
+        dibsRepository.findById(1L);
+        return "OK";
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signupUser(@RequestBody @Valid SignUpRequest request) {

@@ -1,10 +1,7 @@
 package com.ably.dibs_api.domain.user;
 
 import com.ably.dibs_api.config.common.BaseTimeEntity;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,10 +14,16 @@ import lombok.Setter;
 public class User extends BaseTimeEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
+    @Column(name = "EMAIL")
     private String email;
+
+    @Column(name = "PASSWORD")
     private String password;
+
+    @Column(name = "NAME")
     private String name;
 
     @Builder
