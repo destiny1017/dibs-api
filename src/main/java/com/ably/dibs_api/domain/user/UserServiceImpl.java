@@ -24,15 +24,6 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ENTITY));
     }
 
-    public User login(LoginServiceRequest request) {
-        User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ENTITY));
-        if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
-          return user;
-        }
-        throw new BusinessException(ErrorCode.PASSWORD_INCORRECT);
-    }
-
     @Override
     public void signup(SignUpServiceRequest request) {
 
@@ -49,6 +40,16 @@ public class UserServiceImpl implements UserService {
                 .name(request.getName())
                 .build();
         userRepository.save(newUser);
+    }
+
+    @Override
+    public User login(LoginServiceRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ENTITY));
+        if(bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return user;
+        }
+        throw new BusinessException(ErrorCode.PASSWORD_INCORRECT);
     }
 
     @Override

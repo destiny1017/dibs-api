@@ -9,6 +9,7 @@ import com.ably.dibs_api.domain.user.UserService;
 import com.ably.dibs_api.domain.user.auth.JwtService;
 import com.ably.dibs_api.domain.user.dto.UserInfoServiceResponse;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class UserController {
     private final JwtService jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signupUser(@RequestBody SignUpRequest request) {
+    public ResponseEntity<Object> signupUser(@RequestBody @Valid SignUpRequest request) {
         userService.signup(SignUpRequest.toServiceRequest(request));
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ResponseDto.builder()
@@ -33,7 +34,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody LoginRequest request, HttpServletResponse response) {
+    public ResponseEntity<Object> login(@RequestBody @Valid LoginRequest request, HttpServletResponse response) {
         User user = userService.login(LoginRequest.toServiceRequest(request));
         // 로그인 성공시 엑세스 토큰, 리프레시 토큰 쿠키에 세팅
         jwtService.generateAccessToken(response, user);

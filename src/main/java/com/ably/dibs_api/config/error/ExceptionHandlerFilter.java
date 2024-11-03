@@ -40,7 +40,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
         try{
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         } catch (IOException e){
-            log.error("");
+            log.error("Occurred Exception while handling Error Response..", e);
         }
     }
 
