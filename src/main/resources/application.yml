@@ -15,7 +15,9 @@ spring:
       connection-timeout: 30000
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
       hibernate:
         show_sql: true
@@ -33,7 +35,7 @@ jwt:
 #  refresh-expiration: 10800000  # 10800000 3 hours: 3hours * 60min * 60sec * 1000 millisecond
   # 테스트용으로 짧게 설정
   access-expiration: 30000  # 30 sec
-  refresh-expiration: 120000  # 2 min
+  refresh-expiration: 300000  # 5 min
 
 logging:
   level:

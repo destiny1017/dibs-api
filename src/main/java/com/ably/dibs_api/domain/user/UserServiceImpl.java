@@ -8,6 +8,7 @@ import com.ably.dibs_api.domain.user.dto.UserInfoServiceResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void signup(SignUpServiceRequest request) {
 
         // 가입된 이메일 있는지 확인
@@ -58,4 +60,5 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ENTITY));
         return UserInfoServiceResponse.of(user);
     }
+
 }

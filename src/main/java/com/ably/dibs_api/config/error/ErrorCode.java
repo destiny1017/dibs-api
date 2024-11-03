@@ -15,9 +15,14 @@ public enum ErrorCode {
     NOT_AUTHENTICATED_USER(UNAUTHORIZED, "권한 없는 사용자"),
 
     // Bad request
-    NOT_FOUND_ENTITY(BAD_REQUEST, "엔티티가 존재하지 않음"),
     EXIST_EMAIL(BAD_REQUEST, "이미 가입된 이메일"),
     PASSWORD_INCORRECT(BAD_REQUEST, "패스워드 불일치"),
+    EXIST_DRAWER_NAME(BAD_REQUEST, "이미 존재하는 찜 서랍"),
+    EXIST_DIBS(BAD_REQUEST, "이미 찜한 상품"),
+
+    // Not found
+    NOT_FOUND_ENTITY(NOT_FOUND, "엔티티가 존재하지 않음"),
+    NOT_FOUND_DRAWER(NOT_FOUND, "찜 서랍이 존재하지 않음"),
 
     // Internal Server error
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류");

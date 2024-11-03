@@ -26,4 +26,16 @@ public class ResponseDto<T> {
         this.timestamp = LocalDateTime.now();
         this.data = data;
     }
+
+    public static <T> ResponseDto<T> of(String code, String message, T data) {
+        return new ResponseDto<>(code, message, data);
+    }
+
+    public static <T> ResponseDto<T> ok(T data) {
+        return of("SUCCESS", "성공", data);
+    }
+
+    public static <T> ResponseDto<T> ok() {
+        return of("SUCCESS", "성공", null);
+    }
 }

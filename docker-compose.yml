@@ -8,7 +8,8 @@ services:
       MYSQL_USER: ably
       MYSQL_PASSWORD: 1234
     volumes:
-      - ./mysql_init.sql:/docker-entrypoint-initdb.d/mysql_init.sql:ro
+      - ./init:/docker-entrypoint-initdb.d:ro
+    command: --secure-file-priv=""  # secure-file-priv 비활성화
     ports:
       - "3306:3306"
     healthcheck:
