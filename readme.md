@@ -2,6 +2,12 @@
 
 > 시간이 없어 readme를 깔끔하게 정리하지 못했습니다ㅠ 좀 더 편하게 보시려면 노션페이지를 봐주세요!  
 https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
+
+#### 실행 방법
+
+> cd ably_backend  # 프로젝트 최상위 루트
+> docker-compose up  
+> http://localhost:8080/swagger-ui/index.html 
   
 - 고려사항
     - 사전과제 실행환경에 docker가 설치되어 있나?
