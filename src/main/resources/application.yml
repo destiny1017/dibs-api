@@ -45,6 +45,12 @@ logging:
     org.springframework.security.web.FilterChainProxy: DEBUG
   config: classpath:logback-${spring.config.activate.on-profile}.xml
 
+springdoc:
+  swagger-ui:
+    groups-order: DESC
+    tags-sorter: alpha
+    operations-sorter: method
+
 ---
 spring:
   config:

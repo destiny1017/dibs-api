@@ -6,6 +6,10 @@ import com.ably.dibs_api.controller.dto.AddDibsResponse;
 import com.ably.dibs_api.domain.dibs.DibsService;
 import com.ably.dibs_api.domain.dibs.dto.DibsResponse;
 import com.ably.dibs_api.domain.dibs.dto.RemoveDibsServiceRequest;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "찜 API", description = "찜 기능 API 리스트입니다.")
+@Tag(name = "03. 찜 API", description = "찜 기능 API 리스트입니다.")
 @RequestMapping("/v1/dibs")
 public class DibsController {
 
@@ -47,9 +51,15 @@ public class DibsController {
     }
 
     @GetMapping("/{drawerId}")
+    @Parameters({
+            @Parameter(name = "page", description = "page number",
+                    in = ParameterIn.QUERY, schema = @Schema(type = "integer",  defaultValue = "0")),
+            @Parameter(name = "size", description = "page size",
+                    in = ParameterIn.QUERY, schema = @Schema(type = "integer",  defaultValue = "5"))
+    })
     public ResponseEntity<ResponseDto<?>> getDibs(
             @PathVariable("drawerId") Long drawerId,
-            @PageableDefault(sort = "id") Pageable pageable) {
+            @PageableDefault @Parameter(hidden = true) Pageable pageable) {
         Page<DibsResponse> dibsList = dibsService.getDibsListByDrawer(drawerId, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ResponseDto.ok(dibsList));
