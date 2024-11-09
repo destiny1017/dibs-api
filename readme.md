@@ -1,83 +1,153 @@
-## 💻 Ably 사전과제 프로젝트
+## 💻 A-bly 사전과제 프로젝트
 
 > 시간이 없어 readme를 깔끔하게 정리하지 못했습니다ㅠ 좀 더 편하게 보시려면 노션페이지를 봐주세요!  
-https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
+https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35  
 
-#### 실행 방법
 
-> cd ably_backend  # 프로젝트 최상위 루트
-> docker-compose up  
-> http://localhost:8080/swagger-ui/index.html 
-  
-- 고려사항
-    - 사전과제 실행환경에 docker가 설치되어 있나?
-        - docker-compose로 일단 만들고 시간 되면 home server 환경도 만들기
-    - docker compose 이미지
-        - jdk 17
-        - mysql 8.0
-        - redis
-        - ~~nginx~~
-    - 인증/인가
-        - JWT 사용, refresh token redis 저장
-    - 테스트 코드
-        - 비즈니스로직 통합테스트 우선적 작성
-        - 이후 시간 남으면 api단위테스트 및 filter 단위 테스트 작성
-    - 분산환경 고려
-        - 실제로 여러 애플리케이션을 띄우진 못하더라도 고려해서 코딩하기
-    - 대용량 처리 고려
-        - 동시성 및 성능 고려하여 작성
-    - API 명세 작성
-        - 수기작성 후 Swagger 적용
+### 실행 방법
+
+```
+cd ~/dibs-api  # 프로젝트 최상위 루트
+docker-compose up
+<http://localhost:8080/swagger-ui/index.html>
+# 최초 실행시 더미로 제공된 product 데이터만 존재합니다.
+```
+
+### 사용 기술
+
+> **`Java 17`**,**`Springboot3`**, **`JPA`, `MySql`, `Redis`, `SpringSecurity`, `JWT`, `JUnit5`**
+> 
+
+### 특별히 신경 쓴 부분
+
+1. SpringSecurity & JWT로 인증, 인가를 구현하고 분산환경을 고려해 Redis에서 Refresh Token을 관리하도록 설계했습니다.
+2. BusinessException과 ErrorCode 기반으로 에러를 꼼꼼하게 처리하였습니다.
+3. 모든 비즈니스 로직(Service Layer)에 대하여 통합 테스트 코드를 빠짐 없이 작성하였습니다.
+4. 레이어간 의존성 분리를 위해 ServiceRequest, ServiceResponse 등으로 상위 모듈은 하위 모듈을 모르도록 하였습니다.
+5. 비즈니스 흐름에 따른 DB 쿼리 과정을 상세히 되짚어보며 인덱스 설계를 하였습니다.
+
+### 개발 전 고려사항
+
+- 사전과제 실행환경에 docker가 설치되어 있나?
+    - docker-compose로 일단 만들고 시간 되면 home server 환경도 만들기
+- docker compose 이미지
+    - jdk 17
+    - mysql 8.0
+    - redis
+    - ~~nginx~~
+- 인증/인가
+    - JWT 사용, refresh token redis 저장
+- 테스트 코드
+    - 비즈니스로직 통합테스트 우선적 작성
+    - 이후 시간 남으면 api단위테스트 및 filter 단위 테스트 작성
+- 분산환경 고려
+    - 실제로 여러 애플리케이션을 띄우진 못하더라도 고려해서 코딩하기
+- 대용량 처리 고려
+    - 동시성 및 성능 고려하여 작성
+- API 명세 작성
+    - 수기작성 후 Swagger 적용
 
 ## 구현 요구사항
 
 ---
 
-- 유저
-    - [x]  이메일과 비밀번호로 회원가입 및 로그인을 할 수 있습니다.
-        - 고려 사항
-            - 이메일 유효성 체크?
+> ***과제에서 제시된 기본 기능 요구사항은 모두 구현 완료하였습니다.**
+> 
 
-              → Spring validation regex로 처리
+### 유저
 
-            - 비밀번호 암호화?
+- [x]  **이메일과 비밀번호로 회원가입 및 로그인을 할 수 있습니다.**
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - 이메일 유효성 체크?
+        
+        → Spring validation regex로 처리
+        
+    - 비밀번호 암호화?
+        
+        → Spring BCryptPasswordEncorder로 처리
+        
+    </aside>
+    
+- [x]  **로그인 후 내 정보를 볼 수 있습니다.**
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - 가져올 정보의 종류?
+        - 이메일, 이름, 가입일?
+        - 찜 리스트나 서랍 리스트는 아래서 구현하므로 굳이
+        - **(실패)** 시간 남으면 프로필사진 or 멤버십 포인트 등..
+    </aside>
+    
 
-              → Spring BCryptPasswordEncorder로 처리
+### 찜 서랍
 
-    - [x]  로그인 후 내 정보를 볼 수 있습니다.
-        - 고려 사항
-            - 가져올 정보의 종류?
-                - 이메일, 이름, 가입일?
-                - 찜 리스트나 서랍 리스트는 아래서 구현하므로 굳이
-                - 시간 남으면 프로필사진 or 멤버십 포인트 등..
-- 찜 서랍
-    - [x]  내 찜 서랍을 생성 및 삭제할 수 있습니다.
-        - [x]  이미 있는 내 찜 서랍의 이름으로 생성할 수 없습니다.
-        - 고려 사항
-            - 찜 서랍 삭제시 찜 상품들 CASECADE 삭제처리
-    - [x]  내 찜 서랍 목록을 볼 수 있습니다. (페이지네이션 or 무한스크롤)
-        - 고려 사항
-            - 찜서랍ID, 서랍명만 가져오면 될까?
-                - 시간되면 대표 썸네일 1~4개 정도 같이 가져오기
-                - + 서랍 내의 찜상품 카운트도 가져오기
-- 찜
-    - [x]  상품을 찜하거나 해제를 할 수 있습니다.
-        - [x]  찜한 상품이 내 다른 찜 서랍에 있을경우 찜할 수 없습니다.
-        - [x]  찜 서랍이 하나도 없을 경우 상품을 찜 할 수 없습니다.
-        - 고려 사항
-            - 사용자가 찜할 서랍을 지정을 하는 건지 안 하는 건지 애매하다..
-            - userId, productId 필수로 받고 drawerId 선택으로 받는 걸로
-                - drawerId 없으면 존재하는 서랍중 제일 오래된 거에 찜
-    - [x]  내 찜 서랍의 찜 목록을 볼 수 있습니다.(페이지네이션 or 무한스크롤)
+- [x]  내 찜 서랍을 생성 및 삭제할 수 있습니다.
+    - [x]  이미 있는 내 찜 서랍의 이름으로 생성할 수 없습니다.
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - 찜 서랍 삭제시 찜 상품들 CASECADE 삭제처리
+    </aside>
+    
+- [x]  내 찜 서랍 목록을 볼 수 있습니다. (페이지네이션 or 무한스크롤)
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - 찜서랍ID, 서랍명만 가져오면 될까?
+        - **(실패)** 시간되면 대표 썸네일 1~4개 정도 같이 가져오기
+        - **(실패)** + 서랍 내의 찜상품 카운트도 가져오기
+    </aside>
+    
+
+### 찜
+
+- [x]  상품을 찜하거나 해제를 할 수 있습니다.
+    - [x]  찜한 상품이 내 다른 찜 서랍에 있을경우 찜할 수 없습니다.
+    - [x]  찜 서랍이 하나도 없을 경우 상품을 찜 할 수 없습니다.
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - 사용자가 찜할 서랍을 지정을 하는 건지 안 하는 건지 애매하다..
+    - userId, productId 필수로 받고 drawerId 선택으로 받는 걸로
+        - drawerId 없으면 존재하는 서랍중 제일 오래된 거에 찜
+    </aside>
+    
+- [x]  내 찜 서랍의 찜 목록을 볼 수 있습니다.(페이지네이션 or 무한스크롤)
+    
+    <aside>
+    💡
+    
+    고려 사항
+    
+    - **(실패)** 찜에 대한 데이터는 FK들 뿐이라 유의미한 데이터를 주려면 PRODUCT 조인해서 가져와야할듯하다
+    </aside>
+    
 
 ## DB 설계
 
 ---
 
-- USER_INFO
-
-
-    | 필드명 | 타입 | 제약 |
+- **USER_INFO**
+    
+    
+    | **필드명** | **타입** | **제약** |
     | --- | --- | --- |
     | ID | INT | PK, AUTO_INCREMENT |
     | EMAIL | VARCHAR(100) | UNIQUE, NOT NULL |
@@ -85,10 +155,10 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     | NAME | VARCHAR(30) | NOT NULL |
     | CREATEAD_AT | DATETIME |  |
     - EMAIL PK를 하지 않는이유는, USER PK는 참조가 자주 될 가능성이 높은 필드인데, STRING비교시 INT보다 다소 성능이 떨어질 것 같아서.
-- DIBS_DRAWER
-
-
-    | 필드명 | 타입 | 제약 |
+- **DIBS_DRAWER**
+    
+    
+    | **필드명** | **타입** | **제약** |
     | --- | --- | --- |
     | ID | INT | PK |
     | USER_ID | INT | FK, UNIQUE(USER_ID, NAME), NOT NULL |
@@ -96,10 +166,10 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     | CREATED_AT | DATETIME |  |
     - USER_ID, NAME 복합키 설정을 하면 DIBS FK 설정 및 API 설계시 참조 파라미터가 많아져서 다소 복잡해짐.
     - USER_ID 인덱스 설정
-- DIBS
-
-
-    | 필드명 | 타입 | 제약 |
+- **DIBS**
+    
+    
+    | **필드명** | **타입** | **제약** |
     | --- | --- | --- |
     | ID | INT | PK, AUTO_INCREMENT |
     | USER_ID | INT | FK, UNIQUE(USER_ID, PRODUCT_ID), NOT NULL |
@@ -112,10 +182,10 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
         - 복합키 설정으로 클러스터 인덱스타게 해도 되지만, 찜은 삽입 삭제가 꽤 빈번할 것 같아 효율이 떨어질 것 같다
     - DRAWER_ID 인덱스는?
         - 유저별 서랍 개수가 그렇게 많지는 않을 것 같아서 안해도 큰 차이 없을 걸로 예상됨
-- PRODUCT
-
-
-    | 필드명 | 타입 | 제약 |
+- **PRODUCT**
+    
+    
+    | **필드명** | **타입** | **제약** |
     | --- | --- | --- |
     | ID | INT | PK, AUTO_INCREMENT |
     | NAME | VARCHAR(50) |  |
@@ -130,9 +200,9 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
 ### 유저
 
 - 회원가입
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     POST /v1/user/signup
     {
     	"email": {email},
@@ -140,25 +210,25 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	"name": {name}
     }
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
     	"timestamp" : "{timestamp}"
     }
     ```
-
+    
 - 로그인
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     POST /v1/user/login
     {
     	"email": {email},
     	"password": {password}
     }
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
@@ -168,14 +238,14 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	}
     }
     ```
-
+    
 - 내 정보
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     GET /v1/user/info/{userId}
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
@@ -187,21 +257,21 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	}
     }
     ```
-
+    
 
 ### 찜 서랍
 
 - 찜 서랍 생성
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     POST /v1/dibs-drawer/create
     {
     	"userId": "{userId}"
     	"drawerName": "{drawerName}"
     }
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
@@ -213,29 +283,28 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	}
     }
     ```
-
+    
 - 찜 서랍 삭제
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     DELETE /v1/dibs-drawer/{drawerId}
     
-    [RESPONSE]
-    {
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
     	"timestamp" : "{timestamp}"
     }
     ```
-
+    
 - 찜 서랍 조회
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     GET /v1/dibs-drawer/{userId}?page={page}&size={size}
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
@@ -250,14 +319,14 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	}
     }
     ```
-
+    
 
 ### 찜
 
 - 상품 찜
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     POST /v1/dibs/add
     {
     	"userId": "{userId}",
@@ -265,7 +334,7 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	"drawerId": "{drawerId}"
     }
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
@@ -275,28 +344,28 @@ https://vanilla-mint-288.notion.site/ABLY-1311473486ff806c8741e081631edf35
     	}
     }
     ```
-
+    
 - 상품 찜 해제
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     DELETE /v1/dibs/{userId}/{productId}
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
     	"timestamp" : "{timestamp}"
     }
     ```
-
+    
 - 찜 서랍 찜 목록 조회
-
+    
     ```json
-    [REQUEST]
+    **[REQUEST]**
     GET /v1/dibs/{drawerId}?page={page}&size={size}
     
-    [RESPONSE]
+    **[RESPONSE]**
     {
     	"code" : "{code}",
     	"message" : "{message}",
